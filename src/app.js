@@ -23,3 +23,30 @@
 // // });
 
 // module.exports = app;
+const express = require('express');
+const bodyParser = require('body-parser');
+const app = express();
+
+// Import routes
+const loginRoutes = require('./routes/login');
+const registerRoutes = require('./routes/register');
+const userRoutes = require('./routes/user');
+
+// Middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
+// Routes
+app.use('/api/login', loginRoutes);
+app.use('/api/register', registerRoutes);
+app.use('/api/users', userRoutes);
+
+// Default route (optional)
+// app.get('/', (req, res) => {
+//   res.send('Welcome to the API');
+// });
+
+module.exports = app;
+
+
+
