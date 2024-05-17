@@ -12,7 +12,7 @@ router.put('/change-password/:id', verifyToken, (req, res) => {
         if (err) {
             res.status(500).json({ error: true, message: 'Failed to connect to database' });
         } else {
-            const query = 'SELECT * FROM users WHERE id = ?';
+            const query = 'SELECT * FROM users WHERE userid = ?';
             connection.query(query, [userId], (err, results) => {
                 if (err) {
                     connection.release();
@@ -45,7 +45,7 @@ router.put('/change-password/:id', verifyToken, (req, res) => {
                                                 res.status(500).json({ error: true, message: 'Failed to hash password' });
                                             } else {
                                                 const hashedPassword = hash;
-                                                const updateQuery = 'UPDATE users SET password = ? WHERE id = ?';
+                                                const updateQuery = 'UPDATE users SET password = ? WHERE userId = ?';
                                                 connection.query(updateQuery, [hashedPassword, userId], (err, results) => {
                                                     connection.release();
                                                     if (err) {
@@ -74,7 +74,7 @@ router.get('/:id', verifyToken, (req, res) => {
         if (err) {
             res.status(500).json({ error: true, message: 'Failed to connect to database' });
         } else {
-            const query = 'SELECT id, name, phone_number, email FROM users WHERE id = ?';
+            const query = 'SELECT userId, name, phoneNumber, email FROM users WHERE userId = ?';
             connection.query(query, [userId], (err, results) => {
                 connection.release();
                 if (err) {
@@ -98,7 +98,7 @@ router.put('/edit-profile/:id', verifyToken, (req, res) => {
         if (err) {
             res.status(500).json({ error: true, message: 'Failed to connect to database' });
         } else {
-            const query = 'SELECT * FROM users WHERE id = ?';
+            const query = 'SELECT * FROM users WHERE userId = ?';
             connection.query(query, [userId], (err, results) => {
                 if (err) {
                     connection.release();
@@ -128,7 +128,7 @@ router.put('/edit-profile/:id', verifyToken, (req, res) => {
                         }
 
                         if (phoneNumber) {
-                            updateData.push('phone_number = ?');
+                            updateData.push('phoneNumber = ?');
                             updateValues.push(phoneNumber);
                         }
 
@@ -136,7 +136,7 @@ router.put('/edit-profile/:id', verifyToken, (req, res) => {
                             connection.release();
                             res.status(400).json({ error: true, message: 'No data to update' });
                         } else {
-                            updateQuery += ` ${updateData.join(', ')} WHERE id = ?`;
+                            updateQuery += ` ${updateData.join(', ')} WHERE userId = ?`;
                             updateValues.push(userId);
 
                             connection.query(updateQuery, updateValues, (err, results) => {

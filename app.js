@@ -1,28 +1,3 @@
-// const express = require('express');
-// const usersRoutes = require('./routes/user.js');
-// const middlewareLogRequest = require('./middleware/logs');
-// const bodyParser = require('body-parser');
-// const db = require('./config/database'); // Mengimpor koneksi database
-
-// const app = express();
-
-// app.use(middlewareLogRequest);
-// app.use(express.json());
-// app.use(bodyParser.json());
-// app.use('/api', usersRoutes);
-
-// // app.get('/', (req, res) => {
-// //     db.query('SELECT * FROM user', (err, results) => {
-// //         if (err) {
-// //             console.error('Database query error:', err);
-// //             res.status(500).send('Database query error');
-// //             return;
-// //         }
-// //         res.send(results);
-// //     });
-// // });
-
-// module.exports = app;
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
@@ -31,6 +6,7 @@ const app = express();
 const loginRoutes = require('./routes/login');
 const registerRoutes = require('./routes/register');
 const userRoutes = require('./routes/user');
+const detailRoutes = require('./routes/details');
 
 // Middleware
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -40,11 +16,7 @@ app.use(bodyParser.json());
 app.use('/api/login', loginRoutes);
 app.use('/api/register', registerRoutes);
 app.use('/api/users', userRoutes);
-
-// Default route (optional)
-// app.get('/', (req, res) => {
-//   res.send('Welcome to the API');
-// });
+app.use('/api/details', detailRoutes);
 
 module.exports = app;
 
