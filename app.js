@@ -1,6 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const app = express();
+const dotenv = require('dotenv');
+dotenv.config();
 
 // Import routes
 const loginRoutes = require('./routes/login');
