@@ -27,13 +27,13 @@ router.post('/', (req, res) => {
             } else if (!isMatch) {
               res.status(401).json({ error: true, message: 'Invalid email or password' });
             } else {
-              const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET;
-              const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET;
+              const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET || 'your_jwt_secret_key';
+              const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET || 'your_refresh_secret_key';
 
               const accessToken = jwt.sign(
                 { id: user.userId },
                 accessTokenSecret,
-                { expiresIn: '15m' }
+                { expiresIn: '1d' }
               );
               const refreshToken = jwt.sign(
                 { id: user.userId },
@@ -41,12 +41,13 @@ router.post('/', (req, res) => {
                 { expiresIn: '7d' }
               );
 
-              const accessTokenExpiry = new Date();
-              accessTokenExpiry.setMinutes(accessTokenExpiry.getMinutes() + 15);
-              const refreshTokenExpiry = new Date();
-              refreshTokenExpiry.setDate(refreshTokenExpiry.getDate() + 7);
+              const accessTokenExpiry = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+              const refreshTokenExpiry = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000); // 7 days
 
               storeTokens(user.userId, accessToken, refreshToken, accessTokenExpiry, refreshTokenExpiry);
+
+              // Remove password before sending user object in response
+              delete user.password;
 
               res.status(200).json({ error: false, message: 'Login successful', accessToken, refreshToken, user });
             }
